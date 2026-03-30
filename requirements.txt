@@ -1,0 +1,3 @@
+# No external Python packages are required for the current implementation.
+# Remote password SSH uses the system OpenSSH client with SSH_ASKPASS.
+# Credential encryption uses the system OpenSSL CLI.

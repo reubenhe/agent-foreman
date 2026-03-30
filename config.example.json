@@ -1,0 +1,25 @@
+{
+  "refresh_interval_sec": 10,
+  "session_scan_limit": 120,
+  "aliases_file": "session_aliases.json",
+  "credentials_file": "credentials.enc.json",
+  "send_mode": "stdin",
+  "hosts": [
+    {
+      "name": "local",
+      "mode": "local"
+    }
+  ],
+  "managed_hosts": [],
+  "paths": {
+    "codex_sessions": "~/.codex/sessions",
+    "claude_projects": "~/.claude/projects",
+    "claude_todos": "~/.claude/todos",
+    "claude_tasks": "~/.claude/tasks"
+  },
+  "status": {
+    "busy_cpu_threshold": 20.0,
+    "active_heartbeat_sec": 120,
+    "stale_heartbeat_sec": 900
+  }
+}

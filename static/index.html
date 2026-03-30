@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>牛马监工台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-copy">
+      <div class="eyebrow">包工头监工台</div>
+      <h1>牛马监工台</h1>
+      <p class="subtitle">今天谁在摸鱼，谁在开工，谁又该被催一嘴，这里一眼看完。</p>
+    </div>
+    <div class="topbar-foreman">
+      <div class="foreman-bubble">今天谁在摸鱼？</div>
+      <div class="foreman-card">
+        <div class="foreman-mascot" aria-hidden="true">
+          <svg viewBox="0 0 220 220">
+            <g transform="translate(36 38) scale(4.2)">
+              <path fill="#7a5535" d="M33.912 14.37C33.588 12.602 31.976 11 30 11H9c-1 0-5.325.035-6 2L.691 19.305C.016 21.27 1 24.087 3.027 24.087c1.15 0 2.596-.028 3.998-.052C10.016 28.046 12.898 36 14 36c.849 0 1.572-3.414 1.862-6h11.25c.234 2.528.843 6 1.888 6 .954 0 2.977-4.301 4.136-10.917.431-1.901.726-4.418.824-7.647.024.172.04.356.04.564v9c0 .553.447 1 1 1s1-.447 1-1v-9c0-1.807-.749-3.053-2.088-3.63z"/>
+              <path fill="#CCD6DD" d="M10 12c-2 2-4.791-1-7-1-2.209 0-3-.434-3-.969 0-.535 1.791-.969 4-.969S12 10 10 12z"/>
+              <circle fill="#292F33" cx="6" cy="16" r="1"/>
+            </g>
+            <g transform="translate(30 43) scale(0.65) rotate(45, 54, 32)">
+              <path d="M12 32 Q18 10 54 10 Q90 10 96 32" fill="#f2bb43" stroke="#2d2219" stroke-width="4"/>
+              <path d="M6 32 H102 Q104 32 104 36 Q104 40 100 40 H8 Q4 40 4 36 Q4 32 6 32 Z" fill="#f0b13c" stroke="#2d2219" stroke-width="4"/>
+              <path d="M50 14 H58 V31 H50 Z" fill="#d39b2b" stroke="#2d2219" stroke-width="3"/>
+            </g>
+          </svg>
+        </div>
+        <div class="foreman-card-text">
+          <div class="foreman-role">总包监工 · 牛马头子</div>
+          <div class="foreman-note">别装忙，先把等回话的活儿干完。</div>
+        </div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button id="refreshBtn">去巡场</button>
+      <button id="toggleHostsBtn" type="button">管工地</button>
+      <div class="meta">
+        <div>生成时间: <span id="generatedAt">-</span></div>
+        <div>巡场节奏: <span id="pollInterval">-</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="summary" id="summary"></section>
+
+  <section class="remote-panel" id="remotePanel" hidden>
+    <div class="remote-head">
+      <div>
+        <div class="eyebrow">在管工地</div>
+        <h2>工地 / 班组管理</h2>
+        <p class="remote-subtitle">工地口令都锁在柜子里，包工头只看状态，不看明文。</p>
+      </div>
+      <button id="newHostBtn" type="button">新增工地</button>
+    </div>
+    <div class="remote-layout">
+      <section class="host-form-panel">
+        <div class="panel-head">
+          <h3 id="hostFormTitle">登记新工地</h3>
+          <button id="cancelHostBtn" class="ghost-btn" type="button" hidden>算了</button>
+        </div>
+        <form id="hostForm" class="host-form">
+          <input id="hostIdInput" type="hidden">
+          <label>
+            <span>工地名</span>
+            <input id="hostNameInput" type="text" placeholder="my-gpu-server" required>
+          </label>
+          <label>
+            <span>工地地址（可直接粘贴 user@host）</span>
+            <input id="hostTargetInput" type="text" placeholder="user@your-server-ip 或 192.168.x.x" required>
+          </label>
+          <div class="form-split">
+            <label>
+              <span>端口</span>
+              <input id="hostPortInput" type="number" min="1" max="65535" value="22" required>
+            </label>
+            <label>
+              <span>催办方式</span>
+              <select id="hostSendModeInput">
+                <option value="stdin">stdin</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            <span>认证方式</span>
+            <select id="hostModeInput">
+              <option value="ssh">SSH 密钥（免密）</option>
+              <option value="ssh_password">SSH 密码</option>
+            </select>
+          </label>
+          <label>
+            <span>工号</span>
+            <input id="hostUsernameInput" type="text" placeholder="your-username" required>
+          </label>
+          <div id="hostPasswordRow">
+            <label>
+              <span>口令</span>
+              <input id="hostPasswordInput" type="password" placeholder="改资料时留空就沿用旧口令">
+            </label>
+          </div>
+          <label class="checkbox-row">
+            <input id="hostEnabledInput" type="checkbox" checked>
+            <span>加入巡场</span>
+          </label>
+          <div class="form-actions">
+            <button id="saveHostBtn" type="submit">记下工地</button>
+            <button id="testHostBtn" type="button" class="ghost-btn">先试通</button>
+          </div>
+          <div id="hostFormFeedback" class="form-feedback"></div>
+        </form>
+      </section>
+
+      <section class="managed-hosts-panel">
+        <div class="panel-head">
+          <h3>正在盯的工地</h3>
+          <div class="host-count"><span id="managedHostCount">0</span> 个工地</div>
+        </div>
+        <div id="managedHosts" class="managed-hosts"></div>
+      </section>
+    </div>
+  </section>
+
+  <section class="filters">
+    <input id="searchInput" type="search" placeholder="按工地 / 项目 / 输出 / 待办搜牛马">
+    <div id="hostFilters" class="host-filters"></div>
+  </section>
+
+  <section id="hostErrors"></section>
+
+  <main class="board" id="board"></main>
+
+  <template id="agentCardTemplate">
+    <article class="agent-card">
+      <div class="card-top">
+        <div class="status-pill"></div>
+        <div class="type-pill"></div>
+        <div class="host-pill"></div>
+      </div>
+      <div class="card-hero">
+        <div class="agent-avatar-wrap">
+          <div class="agent-avatar"></div>
+          <div class="agent-caption"></div>
+        </div>
+        <div class="hero-text">
+          <div class="title-row">
+            <h3 class="project"></h3>
+            <button class="mini-btn rename-btn" type="button">改花名</button>
+          </div>
+          <div class="branch"></div>
+          <div class="hostline"></div>
+          <div class="metrics"></div>
+          <div class="action-feedback"></div>
+        </div>
+      </div>
+      <div class="pending-block">
+        <div class="label">还没干完</div>
+        <ul class="pending-list"></ul>
+      </div>
+      <div class="recent-block">
+        <div class="label">最近动静</div>
+        <pre class="recent-output"></pre>
+      </div>
+      <details class="details">
+        <summary>监工细节</summary>
+        <div class="kv cwd"></div>
+        <div class="kv cmd"></div>
+        <div class="kv session"></div>
+      </details>
+      <div class="action-row">
+        <textarea class="quick-input" rows="3" placeholder="留空直接催，填内容就训话…"></textarea>
+        <button class="mini-btn send-btn" type="button">发话</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
