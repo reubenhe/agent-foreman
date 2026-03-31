@@ -17,6 +17,8 @@ See which agents are working, waiting for input, or slacking — and send messag
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 
+![Dashboard](docs/screenshots/screenshot1.png)
+
 ### Features
 
 - Real-time agent monitoring (1s background refresh, no page flicker)
@@ -39,7 +41,7 @@ See which agents are working, waiting for input, or slacking — and send messag
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/agent-foreman.git
+git clone https://github.com/operoncao123/agent-foreman.git
 cd agent-foreman
 cp config.example.json config.json
 ```
@@ -131,7 +133,9 @@ See `config.example.json` for all options. Key fields:
   "managed_hosts": [],
   "paths": {
     "codex_sessions": "~/.codex/sessions",
-    "claude_projects": "~/.claude/projects"
+    "claude_projects": "~/.claude/projects",
+    "claude_todos": "~/.claude/todos",
+    "claude_tasks": "~/.claude/tasks"
   }
 }
 ```
@@ -171,6 +175,8 @@ MIT
 
 一眼看出哪个 Agent 在开工、在等回话、在摸鱼，并直接从浏览器向它发话催活。
 
+![Dashboard](docs/screenshots/screenshot1.png)
+
 ### 功能
 
 - 实时监控（1秒后台刷新，无页面闪烁）
@@ -193,7 +199,7 @@ MIT
 ### 安装
 
 ```bash
-git clone https://github.com/your-username/agent-foreman.git
+git clone https://github.com/operoncao123/agent-foreman.git
 cd agent-foreman
 cp config.example.json config.json
 ```
@@ -285,7 +291,9 @@ sudo sysctl -p /etc/sysctl.d/10-ptrace.conf
   "managed_hosts": [],
   "paths": {
     "codex_sessions": "~/.codex/sessions",
-    "claude_projects": "~/.claude/projects"
+    "claude_projects": "~/.claude/projects",
+    "claude_todos": "~/.claude/todos",
+    "claude_tasks": "~/.claude/tasks"
   }
 }
 ```
