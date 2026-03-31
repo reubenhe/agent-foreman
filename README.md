@@ -35,7 +35,7 @@ See which agents are working, waiting for input, or slacking — and send messag
 
 | Platform | Requirements |
 |----------|--------------|
-| Linux | Python 3.9+, OpenSSL, OpenSSH |
+| Linux | Python 3.9+, OpenSSL, OpenSSH, setsid (util-linux, for SSH password mode) |
 | macOS | Python 3.9+, tmux (for send feature), psutil (auto-installed) |
 
 ### Installation
@@ -62,6 +62,8 @@ Press `Ctrl+B` then `D` to detach from tmux. Open your browser:
 ```
 http://<your-server-ip>:8787
 ```
+
+> Make sure port 8787 is open in your firewall or security group.
 
 ### Add Remote Hosts
 
@@ -104,10 +106,12 @@ Then select **SSH Key** in the form.
 
 #### How injection works
 
+> **Linux kernel 6.2+** removed TIOCSTI. On modern kernels the server falls back to tmux (if the agent runs inside tmux) or ptrace. Enable ptrace if needed (see below).
+
 | Platform | Method | Requirement |
 |----------|--------|-------------|
-| Linux local | ptrace TIOCSTI | Same user, ptrace_scope ≤ 1 |
-| Linux remote | SSH + ptrace TIOCSTI | SSH access |
+| Linux local | tmux → ptrace TIOCSTI | tmux, or same user with ptrace_scope ≤ 1 |
+| Linux remote | SSH + tmux → ptrace TIOCSTI | SSH access |
 | macOS | SSH + tmux send-keys | Agent must run inside tmux |
 
 #### Linux ptrace permission
@@ -193,7 +197,7 @@ MIT
 
 | 平台 | 要求 |
 |------|------|
-| Linux | Python 3.9+，OpenSSL，OpenSSH |
+| Linux | Python 3.9+，OpenSSL，OpenSSH，setsid（util-linux，SSH 密码模式需要） |
 | macOS | Python 3.9+，tmux（发话需要），psutil（自动安装） |
 
 ### 安装
@@ -220,6 +224,8 @@ python3 monitor_server.py --host 0.0.0.0 --port 8787
 ```
 http://<your-server-ip>:8787
 ```
+
+> 确保服务器防火墙或安全组已放行 8787 端口。
 
 ### 添加远程主机
 
@@ -262,10 +268,12 @@ ssh-copy-id user@your-server-ip
 
 #### 各平台注入方式
 
+> **Linux 内核 6.2+** 已移除 TIOCSTI。新版内核上会自动回退到 tmux（如果 Agent 在 tmux 里运行）或 ptrace，必要时请开启 ptrace（见下方说明）。
+
 | 平台 | 方式 | 前提 |
 |------|------|------|
-| Linux 本地 | ptrace TIOCSTI | 同用户，ptrace_scope ≤ 1 |
-| Linux 远程 | SSH + ptrace TIOCSTI | SSH 可达 |
+| Linux 本地 | tmux → ptrace TIOCSTI | tmux，或同用户且 ptrace_scope ≤ 1 |
+| Linux 远程 | SSH + tmux → ptrace TIOCSTI | SSH 可达 |
 | macOS | SSH + tmux send-keys | Agent 在 tmux 里运行 |
 
 #### Linux ptrace 权限
